@@ -1,0 +1,37 @@
+@import "tailwindcss";
+/* Leaflet Map Styles */
+.leaflet-container {
+  font-family: inherit;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.leaflet-popup-content {
+  margin: 0;
+  padding: 0;
+}
+
+.leaflet-popup-tip {
+  box-shadow: none;
+}
+
+.custom-issue-marker,
+.custom-landmark-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Ensure map controls are visible */
+.leaflet-control-zoom a {
+  background-color: white !important;
+  color: #374151 !important;
+  border: 1px solid #d1d5db !important;
+}
+
+.leaflet-control-zoom a:hover {
+  background-color: #f9fafb !important;
+}
+

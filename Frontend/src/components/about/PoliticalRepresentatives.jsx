@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { politicalRepresentatives } from '../../data/mockData';
+import { politicalRepresentatives } from '../../data/mockdata.js';
 
 const PoliticalRepresentatives = () => {
   const [selectedRep, setSelectedRep] = useState(null);

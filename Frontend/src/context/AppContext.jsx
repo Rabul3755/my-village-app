@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { issueAPI, leaderAPI, politicalRepAPI } from '../services/api';
-import { villageInfo as initialVillageInfo } from '../data/mockData';
+import { villageInfo as initialVillageInfo } from '../data/mockdata.js';
 
 const AppContext = createContext();
 

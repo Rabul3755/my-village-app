@@ -3,7 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 import { connectDB } from "./config/database.js";
-import issuesRouter from "./routes/issueRoutes.js";
+import  uploadRouter  from "./routes/issueRoutes.js";
 import PoliticalRepresentativesRouter from "./routes/politicalRepresentativeRoutes.js";
 import LeaderRouter from "./routes/leaderRoutes.js";
 import authRouter from "./routes/authRoutes.js";
@@ -28,7 +28,7 @@ app.use(express.json());
 
 
 app.use('/api/auth', authRouter);
-app.use("/api/issues", issuesRouter);
+app.use("/api/issues", uploadRouter);
 app.use("/api/leaders", LeaderRouter);
 app.use("/api/political", PoliticalRepresentativesRouter);
 app.use('/api/admin', adminRouter);

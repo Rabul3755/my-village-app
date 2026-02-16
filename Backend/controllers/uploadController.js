@@ -11,84 +11,113 @@ const uploadIssueImages = async (req, res) => {
     if (!issue) {
       return res.status(404).json({
         success: false,
-        message: 'Issue not found'
+        message: "Issue not found"
       });
     }
 
-    // Get uploaded files
-    const files = req.files;
-    
-    if (!files || files.length === 0) {
+    if (!req.files || req.files.length === 0) {
       return res.status(400).json({
         success: false,
-        message: 'Please upload at least one image'
+        message: "Please upload at least one image"
       });
     }
 
-    // Process uploaded images
-    const issueImages = files.map(file => ({
-      url: file.path, // Cloudinary URL or local path
-      caption: `Issue photo ${Date.now()}`
-    }));
+    const uploadedImages = [];
 
-    // Add images to issue
-    issue.issueImages.push(...issueImages);
+    for (const file of req.files) {
+      const result = await cloudinary.uploader.upload_stream(
+        {
+          folder: "village-platform/issues"
+        },
+        (error, result) => {
+          if (error) throw error;
+        }
+      );
+
+      const uploadResult = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: "village-platform/issues" },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        );
+
+        stream.end(file.buffer);
+      });
+
+      uploadedImages.push({
+        url: uploadResult.secure_url,
+        public_id: uploadResult.public_id,
+        caption: `Issue photo`
+      });
+    }
+
+    issue.issueImages.push(...uploadedImages);
     await issue.save();
 
     res.status(200).json({
       success: true,
-      message: 'Images uploaded successfully',
-      data: issueImages
+      message: "Images uploaded successfully",
+      data: uploadedImages
     });
+
   } catch (error) {
-    console.error('Upload error:', error);
+    console.error(error);
     res.status(500).json({
       success: false,
-      message: 'Error uploading images',
+      message: "Error uploading images",
       error: error.message
     });
   }
 };
 
+
 // @desc    Upload resolution images
 // @route   POST /api/issues/:id/upload-resolution-images
 // @access  Public
-const  uploadResolutionImages = async (req, res) => {
+const uploadResolutionImages = async (req, res) => {
   try {
     const issue = await Issue.findById(req.params.id);
 
     if (!issue) {
       return res.status(404).json({
         success: false,
-        message: 'Issue not found'
+        message: "Issue not found"
       });
     }
 
-    const files = req.files;
-    
-    if (!files || files.length === 0) {
-      return res.status(400).json({
-        success: false,
-        message: 'Please upload at least one image'
+    const uploadedImages = [];
+
+    for (const file of req.files) {
+
+      const uploadResult = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: "village-platform/resolutions" },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        );
+
+        stream.end(file.buffer);
+      });
+
+      uploadedImages.push({
+        url: uploadResult.secure_url,
+        public_id: uploadResult.public_id,
+        caption: req.body.caption || "Resolution photo",
+        uploadedBy: req.body.uploadedBy || "Admin"
       });
     }
 
-    // Process resolution images
-    const resolutionImages = files.map(file => ({
-      url: file.path,
-      caption: req.body.caption || `Resolution photo ${Date.now()}`,
-      uploadedBy: req.body.uploadedBy || 'Admin'
-    }));
+    issue.resolutionImages.push(...uploadedImages);
 
-    // Add resolution images and update status if needed
-    issue.resolutionImages.push(...resolutionImages);
-    
-    // Auto-update status to resolved if images are uploaded
-    if (issue.status !== 'resolved') {
-      issue.status = 'resolved';
+    if (issue.status !== "resolved") {
+      issue.status = "resolved";
       issue.updates.push({
-        text: 'Issue marked as resolved with photographic evidence',
-        updatedBy: req.body.uploadedBy || 'Admin'
+        text: "Issue marked as resolved with photographic evidence",
+        updatedBy: req.body.uploadedBy || "Admin"
       });
     }
 
@@ -96,18 +125,19 @@ const  uploadResolutionImages = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: 'Resolution images uploaded successfully',
-      data: resolutionImages
+      message: "Resolution images uploaded successfully",
+      data: uploadedImages
     });
+
   } catch (error) {
-    console.error('Resolution upload error:', error);
     res.status(500).json({
       success: false,
-      message: 'Error uploading resolution images',
+      message: "Error uploading resolution images",
       error: error.message
     });
   }
 };
+
 
 // @desc    Delete an image
 // @route   DELETE /api/issues/:issueId/images/:imageId

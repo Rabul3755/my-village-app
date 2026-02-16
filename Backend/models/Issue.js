@@ -52,12 +52,14 @@ const IssueSchema = new mongoose.Schema({
   // Updated images field for issue photos
   issueImages: [{
     url: String,
+     public_id: String,
     caption: String,
     uploadedAt: { type: Date, default: Date.now }
   }],
   // New field for resolution photos
   resolutionImages: [{
     url: String,
+      public_id: String,
     caption: String,
     uploadedBy: String,
     uploadedAt: { type: Date, default: Date.now }

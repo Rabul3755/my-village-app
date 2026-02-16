@@ -25,15 +25,7 @@ const uploadIssueImages = async (req, res) => {
     const uploadedImages = [];
 
     for (const file of req.files) {
-      const result = await cloudinary.uploader.upload_stream(
-        {
-          folder: "village-platform/issues"
-        },
-        (error, result) => {
-          if (error) throw error;
-        }
-      );
-
+      
       const uploadResult = await new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
           { folder: "village-platform/issues" },
@@ -142,42 +134,45 @@ const uploadResolutionImages = async (req, res) => {
 // @desc    Delete an image
 // @route   DELETE /api/issues/:issueId/images/:imageId
 // @access  Public
-const  deleteImage = async (req, res) => {
+const deleteImage = async (req, res) => {
   try {
     const { issueId, imageId } = req.params;
-    const { imageType } = req.body; // 'issueImages' or 'resolutionImages'
+    const { imageType } = req.body;
+
+    if (!['issueImages', 'resolutionImages'].includes(imageType)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid image type"
+      });
+    }
 
     const issue = await Issue.findById(issueId);
 
     if (!issue) {
       return res.status(404).json({
         success: false,
-        message: 'Issue not found'
+        message: "Issue not found"
       });
     }
 
-    let imageArray;
-    if (imageType === 'resolutionImages') {
-      imageArray = issue.resolutionImages;
-    } else {
-      imageArray = issue.issueImages;
-    }
+    const imageArray = issue[imageType];
 
-    // Find and remove image
-    const imageIndex = imageArray.findIndex(img => img._id.toString() === imageId);
-    
+    const imageIndex = imageArray.findIndex(
+      img => img._id.toString() === imageId
+    );
+
     if (imageIndex === -1) {
       return res.status(404).json({
         success: false,
-        message: 'Image not found'
+        message: "Image not found"
       });
     }
 
-    // Optional: Delete from Cloudinary or file system
-    const imageUrl = imageArray[imageIndex].url;
-    if (imageUrl.includes('cloudinary')) {
-      const publicId = imageUrl.split('/').pop().split('.')[0];
-      await cloudinary.uploader.destroy(`village-platform/${publicId}`);
+    const image = imageArray[imageIndex];
+
+    // Delete from Cloudinary
+    if (image.public_id) {
+      await cloudinary.uploader.destroy(image.public_id);
     }
 
     imageArray.splice(imageIndex, 1);
@@ -185,16 +180,18 @@ const  deleteImage = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: 'Image deleted successfully'
+      message: "Image deleted successfully"
     });
+
   } catch (error) {
-    console.error('Delete image error:', error);
+    console.error("Delete image error:", error);
     res.status(500).json({
       success: false,
-      message: 'Error deleting image',
+      message: "Error deleting image",
       error: error.message
     });
   }
 };
+
 
 export {uploadIssueImages, uploadResolutionImages,deleteImage}

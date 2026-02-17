@@ -70,16 +70,13 @@ const register = async (req, res) => {
   }
 };
 
-// @desc    Login user
-// @route   POST /api/auth/login
-// @access  Public
+//    Login user
+//   POST /api/auth/login
+
 const login = async (req, res) => {
   try {
-   
-
     const { email, password } = req.body;
 
-    // Validate input
     if (!email || !password) {
       return res.status(400).json({
         success: false,
@@ -87,7 +84,6 @@ const login = async (req, res) => {
       });
     }
 
-    // Check if email is a string (not an object)
     if (typeof email !== 'string') {
       console.error('Invalid email type:', typeof email, email);
       return res.status(400).json({
@@ -96,7 +92,6 @@ const login = async (req, res) => {
       });
     }
 
-    // Check for user
     console.log('Searching for user with email:', email);
     const user = await User.findOne({ email }).select('+password');
 
@@ -107,9 +102,10 @@ const login = async (req, res) => {
         message: 'Invalid credentials'
       });
     }
-
+    
     // Check password
     const isPasswordMatch = await user.matchPassword(password);
+  
     if (!isPasswordMatch) {
       console.log('Password mismatch for user:', email);
       return res.status(401).json({

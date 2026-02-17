@@ -43,6 +43,7 @@ const UserSchema = new mongoose.Schema({
   timestamps: true
 });
 
+// Encrypt password using bcrypt
 UserSchema.pre('save', async function(next) {
   if (!this.isModified('password')) {
     return next();
@@ -56,7 +57,6 @@ UserSchema.pre('save', async function(next) {
 UserSchema.methods.matchPassword = async function(enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
-;
 
 const UserModel =mongoose.models.User || mongoose.model('User', UserSchema);
 

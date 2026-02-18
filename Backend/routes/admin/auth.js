@@ -8,20 +8,20 @@ import {
 import { protect, authorize } from '../../middleware/auth.js';
 import { requireAdmin, requireSuperAdmin } from '../../middleware/adminAuth.js';
 
-const authRouter = express.Router();
+const adminAuthRouter = express.Router();
 
 // Public routes
-authRouter.post('/login', adminLogin);
+adminAuthRouter.post('/login', adminLogin);
 
 // Protected routes
-authRouter.use(protect);
-authRouter.use(authorize('admin', 'superadmin'));
-authRouter.use(requireAdmin);
+adminAuthRouter.use(protect);
+adminAuthRouter.use(authorize('admin', 'superadmin'));
+adminAuthRouter.use(requireAdmin);
 
-authRouter.get('/me', getAdminProfile);
-authRouter.put('/updatedetails', updateAdminDetails);
+adminAuthRouter.get('/me', getAdminProfile);
+adminAuthRouter.put('/updatedetails', updateAdminDetails);
 
 // Superadmin only routes
-authRouter.post('/register', requireSuperAdmin, adminRegister);
+adminAuthRouter.post('/register', requireSuperAdmin, adminRegister);
 
-export default authRouter;
+export default adminAuthRouter;

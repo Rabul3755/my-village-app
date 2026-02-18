@@ -5,11 +5,12 @@ import issuesRouter from './issues.js';
 import leadersRouter from './leaders.js';
 import representativesRouter from './representatives.js';
 import analyticsRouter from './analytics.js';
+import adminAuthRouter from './auth.js';
 
 const adminRouter = express.Router();
 
 // Mount admin routes
-adminRouter.use('/auth', authRouter);
+adminRouter.use('/auth', adminAuthRouter);
 adminRouter.use('/dashboard', dashboardRouter);
 adminRouter.use('/issues', issuesRouter);
 adminRouter.use('/leaders', leadersRouter);

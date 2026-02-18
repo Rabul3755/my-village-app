@@ -3,7 +3,7 @@ import User from '../models/User.js';
 import Admin from '../models/Admin.js';
 
 const protect = async (req, res, next) => {
-  console.log(re)
+
   try {
     let token;
 

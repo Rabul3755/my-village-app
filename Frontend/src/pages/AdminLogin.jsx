@@ -146,7 +146,7 @@ const AdminLogin = () => {
               </button>
             </div>
 
-            <div className="rounded-lg bg-blue-50 border border-blue-200 p-4">
+            {/* <div className="rounded-lg bg-blue-50 border border-blue-200 p-4">
               <div className="flex items-start">
                 <div className="flex-shrink-0">
                   <svg className="h-5 w-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -163,7 +163,7 @@ const AdminLogin = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </form>
         </div>
 

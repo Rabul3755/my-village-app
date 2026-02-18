@@ -25,7 +25,7 @@ import AdminSettings from "./pages/admin/AdminSettings";
 const PublicRoutes = () => (
   <>
     <Header />
-    <main className="flex-grow">
+    <main className="grow">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/issues" element={<Issues />} />

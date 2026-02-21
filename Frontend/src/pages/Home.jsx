@@ -15,7 +15,7 @@ const Home = () => {
   return (
     <div className="min-h-screen">
       
-      <section className="bg-gradient-to-br from-blue-50 to-green-50 py-20 px-4">
+      <section className="bg-linear-to-br from-blue-50 to-green-50 py-20 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <h1 className="text-5xl font-bold text-gray-800 mb-6">
             Welcome to {village.name}

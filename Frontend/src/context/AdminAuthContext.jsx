@@ -16,7 +16,7 @@ export const AdminAuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  console.log('🔄 AdminAuthProvider state:', { admin, loading, error });
+
 
   // Check if admin is logged in on initial load
   useEffect(() => {

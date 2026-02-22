@@ -204,7 +204,7 @@ const AdminRepresentatives = () => {
         </div>
         <button
           onClick={() => setShowAddModal(true)}
-          className="px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:from-green-700 hover:to-emerald-700 flex items-center space-x-2 shadow-lg hover:shadow-xl transition-all"
+          className="px-4 py-2 bg-linear-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:from-green-700 hover:to-emerald-700 flex items-center space-x-2 shadow-lg hover:shadow-xl transition-all"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
@@ -355,10 +355,10 @@ const AdminRepresentatives = () => {
                   <tr key={rep._id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
-                        <div className="flex-shrink-0 h-10 w-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold">
+                        <div className="shrink-0 h-10 w-10 bg--to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold">
                           {rep.name.charAt(0)}
                         </div>
-                        <div className="ml-4">
+                        <div className="ml-4">gradient
                           <div className="text-sm font-medium text-gray-900">{rep.name}</div>
                           <div className="text-sm text-gray-500 truncate max-w-xs">{rep.bio?.substring(0, 60)}...</div>
                         </div>
@@ -650,7 +650,7 @@ const AdminRepresentatives = () => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:from-green-700 hover:to-emerald-700 disabled:opacity-50"
+                    className="px-4 py-2 bg-linear-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:from-green-700 hover:to-emerald-700 disabled:opacity-50"
                   >
                     {loading ? 'Adding...' : 'Add Representative'}
                   </button>

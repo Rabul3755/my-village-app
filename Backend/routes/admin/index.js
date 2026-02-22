@@ -1,5 +1,4 @@
 import express from 'express';
-import authRouter from './auth.js';
 import dashboardRouter from './dashboard.js';
 import issuesRouter from './issues.js';
 import leadersRouter from './leaders.js';

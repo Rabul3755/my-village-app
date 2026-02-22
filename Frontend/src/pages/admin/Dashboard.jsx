@@ -129,10 +129,6 @@ const Dashboard = () => {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString();
-  };
 
   const getActivityIcon = (type) => {
     switch (type) {
@@ -376,7 +372,7 @@ const Dashboard = () => {
                   </div>
                 ))}
               </div>
-            </div>
+            </div> 
           </div>
         </div>
 
@@ -463,7 +459,7 @@ const Dashboard = () => {
           </div>
 
           {/* Performance Metrics */}
-          <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl shadow-sm p-6 text-white">
+          <div className="bg-linear-to-br from-blue-500 to-purple-600 rounded-xl shadow-sm p-6 text-white">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold">Platform Performance</h3>
               <div className="p-2 bg-white/20 rounded-lg">

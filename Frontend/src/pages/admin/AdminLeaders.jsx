@@ -129,149 +129,93 @@ const AdminLeaders = () => {
       </div>
 
       {showCreateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
-            <h2 className="text-xl font-semibold mb-4">Add New Leader</h2>
+  <div
+    className="fixed inset-0 z-50 flex items-center justify-center"
+    onClick={() => setShowCreateModal(false)}
+  >
+    {/* Overlay */}
+    <div className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300"></div>
 
-            <form onSubmit={handleLeaderData}>
-              <div className="space-y-4">
-                {/* Name */}
-                <div>
-                  <label className="block text-sm font-medium mb-1">Name</label>
-                  <input
-                    type="text"
-                    name="name"
-                    required
-                    className="w-full px-3 py-2 border rounded-md"
-                  />
-                </div>
+    {/* Modal */}
+    <div
+      onClick={(e) => e.stopPropagation()}
+      className="relative bg-white w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl p-6
+                 transform transition-all duration-300 scale-100 opacity-100
+                 animate-[fadeIn_0.3s_ease-out]"
+    >
+      <h2 className="text-2xl font-semibold mb-6 text-gray-800">
+        Add New Leader
+      </h2>
 
-                {/* Position */}
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Position
-                  </label>
-                  <input
-                    type="text"
-                    name="position"
-                    required
-                    className="w-full px-3 py-2 border rounded-md"
-                  />
-                </div>
+      <form onSubmit={handleLeaderData}>
+        <div className="space-y-4">
 
-                {/* Area */}
-                <div>
-                  <label className="block text-sm font-medium mb-1">Area</label>
-                  <input
-                    type="text"
-                    name="area"
-                    required
-                    className="w-full px-3 py-2 border rounded-md"
-                  />
-                </div>
+          <input
+            type="text"
+            name="name"
+            placeholder="Leader Name"
+            required
+            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+          />
 
-                {/* Party */}
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Party
-                  </label>
-                  <input
-                    type="text"
-                    name="party"
-                    className="w-full px-3 py-2 border rounded-md"
-                  />
-                </div>
+          <input
+            type="text"
+            name="position"
+            placeholder="Position"
+            required
+            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+          />
 
-                {/* Phone */}
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Phone
-                  </label>
-                  <input
-                    type="text"
-                    name="phone"
-                    className="w-full px-3 py-2 border rounded-md"
-                  />
-                </div>
+          <input
+            type="text"
+            name="area"
+            placeholder="Area"
+            required
+            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+          />
 
-                {/* Email */}
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    className="w-full px-3 py-2 border rounded-md"
-                  />
-                </div>
+          <textarea
+            name="bio"
+            placeholder="Short Bio"
+            rows="3"
+            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+          />
 
-                {/* Office */}
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Office
-                  </label>
-                  <input
-                    type="text"
-                    name="office"
-                    className="w-full px-3 py-2 border rounded-md"
-                  />
-                </div>
-
-                {/* Bio */}
-                <div>
-                  <label className="block text-sm font-medium mb-1">Bio</label>
-                  <textarea
-                    name="bio"
-                    rows="3"
-                    className="w-full px-3 py-2 border rounded-md"
-                  />
-                </div>
-
-                {/* Responsibilities */}
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Responsibilities (comma separated)
-                  </label>
-                  <textarea
-                    name="responsibilities"
-                    rows="2"
-                    className="w-full px-3 py-2 border rounded-md"
-                  />
-                </div>
-
-                {/* Active */}
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    name="isActive"
-                    defaultChecked
-                    className="mr-2 h-4 w-4 text-blue-600 rounded"
-                  />
-                  <label className="text-sm font-medium">Active</label>
-                </div>
-              </div>
-
-              {/* Buttons */}
-              <div className="flex justify-end gap-3 mt-6">
-                <button
-                  type="button"
-                  onClick={() => setShowCreateModal(false)}
-                  className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                >
-                  Save
-                </button>
-              </div>
-            </form>
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              name="isActive"
+              defaultChecked
+              className="mr-2 h-4 w-4 text-blue-600"
+            />
+            <label className="text-sm font-medium text-gray-700">
+              Active Leader
+            </label>
           </div>
+
         </div>
-      )}
+
+        {/* Buttons */}
+        <div className="flex justify-end gap-3 mt-6">
+          <button
+            type="button"
+            onClick={() => setShowCreateModal(false)}
+            className="px-5 py-2 rounded-lg bg-gray-400 text-white hover:bg-gray-500 transition"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="submit"
+            className="px-5 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition"
+          >
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+)}
       {/* Filters */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">

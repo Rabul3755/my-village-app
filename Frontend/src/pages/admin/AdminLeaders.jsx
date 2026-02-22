@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { adminAPI } from '../../services/api';
-import { useAdminAuth } from '../../context/AdminAuthContext';
+import React, { useState, useEffect } from "react";
+import { adminAPI } from "../../services/api";
+import { useAdminAuth } from "../../context/AdminAuthContext";
 
 const AdminLeaders = () => {
   const { admin } = useAdminAuth();
@@ -8,11 +8,11 @@ const AdminLeaders = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filters, setFilters] = useState({
-    position: 'all',
-    search: '',
-    isActive: 'true',
+    position: "all",
+    search: "",
+    isActive: "true",
     page: 1,
-    limit: 10
+    limit: 10,
   });
   const [pagination, setPagination] = useState({});
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -28,10 +28,45 @@ const AdminLeaders = () => {
       setLeaders(response.data);
       setPagination(response.pagination);
     } catch (error) {
-      setError('Failed to load leaders');
-      console.error('Leaders error:', error);
+      setError("Failed to load leaders");
+      console.error("Leaders error:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleLeaderData = (e) => {
+    const formData = new FormData(e.target);
+
+    const leaderData = {
+      name: formData.get("name"),
+      position: formData.get("position"),
+      area: formData.get("area"),
+      party: formData.get("party"),
+      bio: formData.get("bio"),
+      isActive: formData.get("isActive") === "on",
+
+      contact: {
+        phone: formData.get("phone"),
+        email: formData.get("email"),
+        office: formData.get("office"),
+      },
+
+      responsibilities: formData
+        .get("responsibilities")
+        ?.split(",")
+        .map((item) => item.trim()),
+    };
+    handleCreate(leaderData);
+  };
+
+  const handleCreate = async (leaderData) => {
+    try {
+      await adminAPI.createLeader(leaderData);
+      setShowCreateModal(false);
+      await loadLeaders();
+    } catch (error) {
+      setError("Failed to create leader");
     }
   };
 
@@ -40,7 +75,7 @@ const AdminLeaders = () => {
       await adminAPI.toggleLeaderActive(leaderId);
       await loadLeaders();
     } catch (error) {
-      setError('Failed to update leader status');
+      setError("Failed to update leader status");
     }
   };
 
@@ -53,7 +88,7 @@ const AdminLeaders = () => {
       await adminAPI.deleteLeader(leaderId);
       await loadLeaders();
     } catch (error) {
-      setError('Failed to delete leader');
+      setError("Failed to delete leader");
     }
   };
 
@@ -70,8 +105,12 @@ const AdminLeaders = () => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">Leader Management</h1>
-          <p className="text-gray-600">Manage local leaders and representatives</p>
+          <h1 className="text-2xl font-bold text-gray-800">
+            Leader Management
+          </h1>
+          <p className="text-gray-600">
+            Manage local leaders and representatives
+          </p>
         </div>
         <div className="flex gap-3">
           <button
@@ -89,14 +128,166 @@ const AdminLeaders = () => {
         </div>
       </div>
 
+      {showCreateModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+            <h2 className="text-xl font-semibold mb-4">Add New Leader</h2>
+
+            <form onSubmit={handleLeaderData}>
+              <div className="space-y-4">
+                {/* Name */}
+                <div>
+                  <label className="block text-sm font-medium mb-1">Name</label>
+                  <input
+                    type="text"
+                    name="name"
+                    required
+                    className="w-full px-3 py-2 border rounded-md"
+                  />
+                </div>
+
+                {/* Position */}
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Position
+                  </label>
+                  <input
+                    type="text"
+                    name="position"
+                    required
+                    className="w-full px-3 py-2 border rounded-md"
+                  />
+                </div>
+
+                {/* Area */}
+                <div>
+                  <label className="block text-sm font-medium mb-1">Area</label>
+                  <input
+                    type="text"
+                    name="area"
+                    required
+                    className="w-full px-3 py-2 border rounded-md"
+                  />
+                </div>
+
+                {/* Party */}
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Party
+                  </label>
+                  <input
+                    type="text"
+                    name="party"
+                    className="w-full px-3 py-2 border rounded-md"
+                  />
+                </div>
+
+                {/* Phone */}
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Phone
+                  </label>
+                  <input
+                    type="text"
+                    name="phone"
+                    className="w-full px-3 py-2 border rounded-md"
+                  />
+                </div>
+
+                {/* Email */}
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    className="w-full px-3 py-2 border rounded-md"
+                  />
+                </div>
+
+                {/* Office */}
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Office
+                  </label>
+                  <input
+                    type="text"
+                    name="office"
+                    className="w-full px-3 py-2 border rounded-md"
+                  />
+                </div>
+
+                {/* Bio */}
+                <div>
+                  <label className="block text-sm font-medium mb-1">Bio</label>
+                  <textarea
+                    name="bio"
+                    rows="3"
+                    className="w-full px-3 py-2 border rounded-md"
+                  />
+                </div>
+
+                {/* Responsibilities */}
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Responsibilities (comma separated)
+                  </label>
+                  <textarea
+                    name="responsibilities"
+                    rows="2"
+                    className="w-full px-3 py-2 border rounded-md"
+                  />
+                </div>
+
+                {/* Active */}
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    name="isActive"
+                    defaultChecked
+                    className="mr-2 h-4 w-4 text-blue-600 rounded"
+                  />
+                  <label className="text-sm font-medium">Active</label>
+                </div>
+              </div>
+
+              {/* Buttons */}
+              <div className="flex justify-end gap-3 mt-6">
+                <button
+                  type="button"
+                  onClick={() => setShowCreateModal(false)}
+                  className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                >
+                  Save
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
       {/* Filters */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Position</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Position
+            </label>
             <select
               value={filters.position}
-              onChange={(e) => setFilters(prev => ({ ...prev, position: e.target.value, page: 1 }))}
+              onChange={(e) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  position: e.target.value,
+                  page: 1,
+                }))
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md"
             >
               <option value="all">All Positions</option>
@@ -107,10 +298,18 @@ const AdminLeaders = () => {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Status
+            </label>
             <select
               value={filters.isActive}
-              onChange={(e) => setFilters(prev => ({ ...prev, isActive: e.target.value, page: 1 }))}
+              onChange={(e) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  isActive: e.target.value,
+                  page: 1,
+                }))
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md"
             >
               <option value="true">Active</option>
@@ -119,20 +318,36 @@ const AdminLeaders = () => {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Search</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Search
+            </label>
             <input
               type="text"
               placeholder="Search leaders..."
               value={filters.search}
-              onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value, page: 1 }))}
+              onChange={(e) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  search: e.target.value,
+                  page: 1,
+                }))
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Items per page</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Items per page
+            </label>
             <select
               value={filters.limit}
-              onChange={(e) => setFilters(prev => ({ ...prev, limit: parseInt(e.target.value), page: 1 }))}
+              onChange={(e) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  limit: parseInt(e.target.value),
+                  page: 1,
+                }))
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md"
             >
               <option value="10">10</option>
@@ -159,22 +374,29 @@ const AdminLeaders = () => {
       {/* Leaders Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {leaders.map((leader) => (
-          <div key={leader._id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+          <div
+            key={leader._id}
+            className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
+          >
             <div className="p-6">
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800">{leader.name}</h3>
+                  <h3 className="text-lg font-semibold text-gray-800">
+                    {leader.name}
+                  </h3>
                   <p className="text-blue-600 font-medium">{leader.position}</p>
                 </div>
-                <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                  leader.isActive 
-                    ? 'bg-green-100 text-green-800' 
-                    : 'bg-red-100 text-red-800'
-                }`}>
-                  {leader.isActive ? 'Active' : 'Inactive'}
+                <span
+                  className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                    leader.isActive
+                      ? "bg-green-100 text-green-800"
+                      : "bg-red-100 text-red-800"
+                  }`}
+                >
+                  {leader.isActive ? "Active" : "Inactive"}
                 </span>
               </div>
-              
+
               <div className="space-y-2 text-sm text-gray-600 mb-4">
                 <div className="flex items-center gap-2">
                   <span>📍</span>
@@ -196,20 +418,22 @@ const AdminLeaders = () => {
 
               <div className="flex justify-between items-center">
                 <button
-                  onClick={() => handleToggleActive(leader._id, leader.isActive)}
+                  onClick={() =>
+                    handleToggleActive(leader._id, leader.isActive)
+                  }
                   className={`px-3 py-1 text-sm rounded ${
                     leader.isActive
-                      ? 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'
-                      : 'bg-green-100 text-green-800 hover:bg-green-200'
+                      ? "bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
+                      : "bg-green-100 text-green-800 hover:bg-green-200"
                   }`}
                 >
-                  {leader.isActive ? 'Deactivate' : 'Activate'}
+                  {leader.isActive ? "Deactivate" : "Activate"}
                 </button>
                 <div className="flex gap-2">
                   <button className="px-3 py-1 text-sm bg-blue-100 text-blue-800 rounded hover:bg-blue-200">
                     Edit
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleDelete(leader._id, leader.name)}
                     className="px-3 py-1 text-sm bg-red-100 text-red-800 rounded hover:bg-red-200"
                   >
@@ -226,8 +450,12 @@ const AdminLeaders = () => {
       {leaders.length === 0 && (
         <div className="text-center py-12">
           <div className="text-gray-400 text-6xl mb-4">👥</div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No leaders found</h3>
-          <p className="text-gray-500">Try adjusting your filters or add a new leader.</p>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">
+            No leaders found
+          </h3>
+          <p className="text-gray-500">
+            Try adjusting your filters or add a new leader.
+          </p>
         </div>
       )}
 
@@ -240,14 +468,18 @@ const AdminLeaders = () => {
             </div>
             <div className="flex gap-2">
               <button
-                onClick={() => setFilters(prev => ({ ...prev, page: prev.page - 1 }))}
+                onClick={() =>
+                  setFilters((prev) => ({ ...prev, page: prev.page - 1 }))
+                }
                 disabled={filters.page === 1}
                 className="px-3 py-1 border border-gray-300 rounded disabled:opacity-50"
               >
                 Previous
               </button>
               <button
-                onClick={() => setFilters(prev => ({ ...prev, page: prev.page + 1 }))}
+                onClick={() =>
+                  setFilters((prev) => ({ ...prev, page: prev.page + 1 }))
+                }
                 disabled={filters.page === pagination.total}
                 className="px-3 py-1 border border-gray-300 rounded disabled:opacity-50"
               >
